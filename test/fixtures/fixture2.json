@@ -1,0 +1,88 @@
+{
+   "blockdevices": [
+      {
+         "vendor": "        ",
+         "subsystems": "block:scsi:usb:pci",
+         "tran": "usb",
+         "type": "disk",
+         "model": "Removable Drive",
+         "label": "nixos-usbstick-24.05-x86_64",
+         "name": "sda",
+         "start": null,
+         "size": 4009754624,
+         "fsuse%": null,
+         "children": [
+            {
+               "vendor": null,
+               "subsystems": "block:scsi:usb:pci",
+               "tran": null,
+               "type": "part",
+               "model": null,
+               "label": "nixos-usbstick-24.05-x86_64",
+               "name": "sda1",
+               "start": 0,
+               "size": 1225752576,
+               "fsuse%": null
+            },{
+               "vendor": null,
+               "subsystems": "block:scsi:usb:pci",
+               "tran": null,
+               "type": "part",
+               "model": null,
+               "label": "EFIBOOT",
+               "name": "sda2",
+               "start": 21928,
+               "size": 3145728,
+               "fsuse%": null
+            }
+         ]
+      },{
+         "vendor": null,
+         "subsystems": "nvme:pci",
+         "tran": "nvme",
+         "type": "disk",
+         "model": "WDS250G2X0C-00L350",
+         "label": null,
+         "name": "nvme0n1",
+         "start": null,
+         "size": 250059350016,
+         "fsuse%": null,
+         "children": [
+            {
+               "vendor": null,
+               "subsystems": "block:nvme:pci",
+               "tran": "nvme",
+               "type": "part",
+               "model": null,
+               "label": "nixos",
+               "name": "nvme0n1p1",
+               "start": 999424,
+               "size": 241547870208,
+               "fsuse%": "19%"
+            },{
+               "vendor": null,
+               "subsystems": "block:nvme:pci",
+               "tran": "nvme",
+               "type": "part",
+               "model": null,
+               "label": "swap",
+               "name": "nvme0n1p2",
+               "start": 472772608,
+               "size": 7999586304,
+               "fsuse%": null
+            },{
+               "vendor": null,
+               "subsystems": "block:nvme:pci",
+               "tran": "nvme",
+               "type": "part",
+               "model": null,
+               "label": "boot",
+               "name": "nvme0n1p3",
+               "start": 2048,
+               "size": 510656512,
+               "fsuse%": "12%"
+            }
+         ]
+      }
+   ]
+}

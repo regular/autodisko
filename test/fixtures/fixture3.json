@@ -1,0 +1,74 @@
+{
+   "blockdevices": [
+      {
+         "vendor": null,
+         "subsystems": "platform",
+         "tran": null,
+         "type": "disk",
+         "model": null,
+         "label": null,
+         "name": "fd0",
+         "start": null,
+         "size": 4096,
+         "fsuse%": null
+      },{
+         "vendor": "QEMU    ",
+         "subsystems": "block:scsi:pci",
+         "tran": "ata",
+         "type": "rom",
+         "model": "QEMU DVD-ROM",
+         "label": null,
+         "name": "sr0",
+         "start": null,
+         "size": 1073741312,
+         "fsuse%": null
+      },{
+         "vendor": "0x1af4",
+         "subsystems": "block:virtio:pci",
+         "tran": "virtio",
+         "type": "disk",
+         "model": null,
+         "label": null,
+         "name": "vda",
+         "start": null,
+         "size": 0,
+         "fsuse%": null
+      },{
+         "vendor": "0x1af4",
+         "subsystems": "block:virtio:pci",
+         "tran": "virtio",
+         "type": "disk",
+         "model": null,
+         "label": "nixos-qemu-24.05-x86_64",
+         "name": "vdb",
+         "start": null,
+         "size": 2631450624,
+         "fsuse%": null,
+         "children": [
+            {
+               "vendor": null,
+               "subsystems": "block:virtio:pci",
+               "tran": "virtio",
+               "type": "part",
+               "model": null,
+               "label": "nixos-qemu-24.05-x86_64",
+               "name": "vdb1",
+               "start": 0,
+               "size": 2631450624,
+               "fsuse%": null
+            },{
+               "vendor": null,
+               "subsystems": "block:virtio:pci",
+               "tran": "virtio",
+               "type": "part",
+               "model": null,
+               "label": "EFIBOOT",
+               "name": "vdb2",
+               "start": 22624,
+               "size": 3145728,
+               "fsuse%": null
+            }
+         ]
+      }
+   ]
+}

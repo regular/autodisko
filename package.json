@@ -1,0 +1,21 @@
+{
+  "name": "autodisko",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test/**"
+  },
+  "bin": {
+    "autodisko": "cli.js"
+  },
+  "keywords": [],
+  "author": "Jan Bölsche <jan@lagomorph.de> (http://regular.codes/)",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "debug": "^4.3.7",
+    "human-size": "^1.1.0",
+    "rc": "^1.2.8",
+    "tape": "^5.8.1"
+  }
+}

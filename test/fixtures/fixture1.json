@@ -1,0 +1,17 @@
+{
+   "blockdevices": [
+      {
+         "vendor": null,
+         "subsystems": "nvme:pci",
+         "tran": "nvme",
+         "type": "disk",
+         "model": "WDS250G2X0C-00L350",
+         "label": null,
+         "name": "nvme0n1",
+         "start": null,
+         "size": 250059350016,
+         "fsuse%": null,
+         "path": "foo/bar"
+      }
+   ]
+}

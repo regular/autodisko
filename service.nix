@@ -6,7 +6,7 @@ in {
       type = types.path;
       default = "/dev/tty1";
       defaultText = default;
-      description = "What tty to use for output (should match tty on kernel command line";
+      description = "What tty to use for output (should match tty on kernel command line)";
     };
 
     ignoreDiskWithLabel = mkOption rec {

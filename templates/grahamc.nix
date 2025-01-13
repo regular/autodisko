@@ -9,16 +9,19 @@ let
 in 
 {
   # Activate opt-in impermanence
-  boot.initrd.postDeviceCommands = lib.mkAfter ''
-    zfs rollback -r rpool/local/root@blank
-  '';
-  boot.loader.grub = {
-    efiSupport = true;
-    efiInstallAsRemovable = true;
-    mirroredBoots = [
-      { devices = [ "nodev" ]; path = "/boot1"; efiSysMountPoint = "/boot1"; }
-      { devices = [ "nodev" ]; path = "/boot2"; efiSysMountPoint = "/boot2"; }
-    ];
+  boot = {
+    supportedFilesystems = [ "zfs" ];
+    initrd.postDeviceCommands = lib.mkAfter ''
+      zfs rollback -r rpool/local/root@blank
+    '';
+    loader.grub = {
+      efiSupport = true;
+      efiInstallAsRemovable = true;
+      mirroredBoots = [
+        { devices = [ "nodev" ]; path = "/boot1"; efiSysMountPoint = "/boot1"; }
+        { devices = [ "nodev" ]; path = "/boot2"; efiSysMountPoint = "/boot2"; }
+      ];
+    };
   };
   # neededForBoot flag is not settable from disko
   fileSystems = {

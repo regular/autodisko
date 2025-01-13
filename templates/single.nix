@@ -1,7 +1,7 @@
 # Autodisko will fill in the let .. in section
-#let 
+let 
 #  mainDevicePath = "/dev/somedevice";
-#in 
+in 
 {
   disko.devices = {
     disk = {

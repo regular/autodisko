@@ -49,7 +49,7 @@
       autodisko = pkgs.buildNpmPackage rec {
         name = "autodisko";
         src = ./.;
-        npmDepsHash = "sha256-EXq2zOqdU0jQUTSjPrHbXSyu6T+k4irLs/S6eaY5ve8=";
+        npmDepsHash = "sha256-oLV91cM4IvsTeWNlbEK9/U+Tczh6ZVXLggwsyIVEpH4";
 
         dontNpmBuild = true;
         makeCacheWritable = true;

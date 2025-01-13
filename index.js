@@ -3,7 +3,10 @@ const hs = require('human-size')
 const debug = require('debug')('autodisko')
 const {join} = require('path')
 
-module.exports = function(input, output, conf) {
+const pull = require('pull-stream')
+const split = require('pull-split')
+
+module.exports = async function(input, output, conf) {
   const {blockdevices} = input
   const disks = (blockdevices || [])
     .filter( ({type}) => type == 'disk')
@@ -28,7 +31,7 @@ module.exports = function(input, output, conf) {
     const result = layout(candidates)
     if (result) {
       const {template, attrs} = result
-      copyTemplate(template, attrs, output)
+      await copyTemplate(template, attrs, output)
       return
     }
   }
@@ -63,13 +66,36 @@ function single(candidates) {
   }
 }
 
-function copyTemplate(name, attrs, output) {
-  const let_in = `let\n${Object.entries(attrs).map( ([key, value])=>{
-    return `  ${key} = "${value}";`
-  }).join('\n')}\nin\n`
-  const content = let_in + fs.readFileSync(join(__dirname, 'templates', `${name}.nix`), 'utf8')
-  console.error(content)
-  fs.writeFileSync(output, content, 'utf8')
+async function copyTemplate(name, attrs, output) {
+  return new Promise( (resolve, reject)=>{
+    const let_in = `\n${Object.entries(attrs).map( ([key, value])=>{
+      return `  ${key} = "${value}";`
+    }).join('\n')}\n`
+    let content = fs.readFileSync(join(__dirname, 'templates', `${name}.nix`), 'utf8')
+    pull(
+      pull.values([content]),
+      split(),
+      (function() {
+        let done = false;
+        return pull.map( l=>{
+          if (done) return l
+          const lt = l.trim()
+          if (lt == 'let') {
+            done = true;
+            return [l, let_in]
+          }
+          return [l]
+        })
+      })(),
+      pull.flatten(),
+      pull.collect( (err, lines)=>{
+        if (err) return reject(err)
+        console.error(lines.join('\n'))
+        fs.writeFileSync(output, lines.join('\n'), 'utf8')
+        resolve()
+      })
+    )
+  })
 }
 
 // -- util

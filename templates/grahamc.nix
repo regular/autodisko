@@ -1,11 +1,12 @@
 # See https://grahamc.com/blog/erase-your-darlings/
 # and https://github.com/KornelJahn/nixos-disko-zfs-test/tree/main?tab=readme-ov-file
 
+{lib, ...} :
 # Autodisko will fill in the let .. in section
-#let 
+let
 #  mainDevicePath = "/dev/somedevice";
 #  secondaryDevicePath = "/dev/somedevice";
-#in 
+in 
 {
   # Activate opt-in impermanence
   boot.initrd.postDeviceCommands = lib.mkAfter ''

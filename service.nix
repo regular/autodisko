@@ -91,6 +91,7 @@ in {
           DeviceAllow = [ 
             "${cfg.tty} w"
             "block-* rwm"
+            "/dev/zfs"
           ];
 
           # TODO: has no effect when non-root user

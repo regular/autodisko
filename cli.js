@@ -18,4 +18,8 @@ try {
   process.exit(1)
 }
 
-doit(input, outfilename, conf)
+const err = doit(input, outfilename, conf)
+if (err) {
+  console.error(err.message)
+  process.exit(1)
+}

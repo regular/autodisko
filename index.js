@@ -26,7 +26,11 @@ module.exports = async function(input, output, conf) {
 
   // TODO: logic for selecting more complex layouts
   // - raid, hybrid, etc
-  const layouts = [grahamc, single]
+  const layouts = [
+    btrfs_luks_raid1_impermanence,
+    grahamc,
+    single
+  ]
   for (const layout of layouts) {
     const result = layout(candidates)
     if (result) {
@@ -36,6 +40,22 @@ module.exports = async function(input, output, conf) {
     }
   }
   return new Error('No matching disk layout found.')
+}
+
+function btrfs_luks_raid1_impermanence(candidates) {
+  if (candidates.length < 2) return
+  const first = candidates[0]
+  const second = candidates[1]
+  if (first.size !== second.size) return
+
+  console.log(`${first.path} and ${second.path} will be used in encrypted btrfs raid1 setup for impermanence`)
+  return {
+    template: 'btrfs-luks-raid1-impermanence',
+    attrs: {
+      mainDevicePath: first.path,
+      secondaryDevicePath: second.path
+    }
+  }
 }
 
 function grahamc(candidates) {

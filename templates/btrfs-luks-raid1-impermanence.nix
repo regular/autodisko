@@ -21,20 +21,16 @@ in {
               };
             };
 
-            luks = {
+            crypt_p1 = {
               size = "100%";
               content = {
                 type = "luks";
-                name = "crypted1";
+                name = "p1";
                 settings = {
                   allowDiscards = true;
                   keyFile = "/tmp/luks.key1";
                 };
                 additionalKeyFiles = [ "/tmp/luks.key2" ];
-                content = {
-                  type = "lvm_pv";
-                  vg = "pool";
-                };
               };
             };
           };
@@ -59,50 +55,37 @@ in {
               };
             };
 
-            luks = {
+            crypt_p2 = {
               size = "100%";
               content = {
                 type = "luks";
-                name = "crypted2";
+                name = "p2";
                 settings = {
                   allowDiscards = true;
                   keyFile = "/tmp/luks.key1";
                 };
                 additionalKeyFiles = [ "/tmp/luks.key2" ];
                 content = {
-                  type = "lvm_pv";
-                  vg = "pool";
-                };
-              };
-            };
-          };
-        };
-      };
-    };
+                  type = "btrfs";
+                  extraArgs = [
+                    "-d raid1"
+                    "/dev/mapper/p1" # Use decrypted mapped device, same name as defined in disk1
+                  ];
+                  subvolumes = {
+                    "/root" = {
+                      mountpoint = "/";
+                    };
 
-    lvm_vg = {
-      pool = {
-        type = "lvm_vg";
-        lvs = {
-          root = {
-            size = "100%FREE";
-            content = {
-              type = "btrfs";
-              extraArgs = [ "-f" "-d raid1" "-m raid1" ];
+                    "/persist" = {
+                      mountpoint = "/persist";
+                      mountOptions = [ "compress=zstd" "subvol=persist" "noatime" ];
+                    };
 
-              subvolumes = {
-                "/root" = {
-                  mountpoint = "/";
-                };
-
-                "/persist" = {
-                  mountpoint = "/persist";
-                  mountOptions = [ "compress=zstd" "subvol=persist" "noatime" ];
-                };
-
-                "/nix" = {
-                  mountpoint = "/nix";
-                  mountOptions = [ "compress=zstd" "subvol=nix" "noatime" ];
+                    "/nix" = {
+                      mountpoint = "/nix";
+                      mountOptions = [ "compress=zstd" "subvol=nix" "noatime" ];
+                    };
+                  };
                 };
               };
             };

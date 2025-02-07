@@ -95,9 +95,9 @@ in {
           #];
 
           # TODO: has no effect when non-root user
-          PrivateNetwork = true;
-          RestrictAddressFamilies = "AF_UNIX";
-          IPAddressDeny = "any";
+          #PrivateNetwork = true;
+          #RestrictAddressFamilies = "AF_UNIX";
+          #IPAddressDeny = "any";
 
           #SystemCallFilter = [
           # "~@clock"

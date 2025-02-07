@@ -36,6 +36,10 @@
         echo
 
         DEBUG=* ${self.packages.${system}.autodisko}/bin/autodisko <(${pkgs.util-linux}/bin/lsblk -Jbo VENDOR,SUBSYSTEMS,TRAN,TYPE,MODEL,LABEL,NAME,START,SIZE,FSUSE%,PATH) /tmp/disk-config.nix
+        #TODO
+        echo "secret1" > /tmp/luks.key1
+        echo "secret2" > /tmp/luks.key2
+
         ${disko.packages.${system}.default}/bin/disko --mode disko /tmp/disk-config.nix
         mount
         echo "Gernating /tmp/hardware-configuration.nix"

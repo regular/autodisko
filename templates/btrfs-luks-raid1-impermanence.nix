@@ -26,6 +26,11 @@ in {
               content = {
                 type = "luks";
                 name = "crypted1";
+                settings = {
+                  allowDiscards = true;
+                  keyFile = "/tmp/luks.key1";
+                };
+                additionalKeyFiles = [ "/tmp/luks.key2" ];
                 content = {
                   type = "lvm_pv";
                   vg = "pool";

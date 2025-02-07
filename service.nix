@@ -57,7 +57,7 @@ in {
           # Needed to share mounts with global namespace
           PrivateMounts = "no";
 
-          User = "regular";
+          #User = "regular";
           #DynamicUser = true;
           
           # Using ReadWritePaths sets up
@@ -77,44 +77,44 @@ in {
           #  "/var/run"
           #];
           
-          AmbientCapabilities = [ 
-            # TODO file bug for systemd v 255: these properties are not merged!
-            "CAP_DAC_OVERRIDE CAP_SYS_RAWIO CAP_FOWNER CAP_SYS_MOUNT CAP_SYS_ADMIN"
-            #"CAP_SYS_ADMIN" # Needed for remounting /nix/store read/write
-          ];
-          CapabilityBoundingSet = AmbientCapabilities;
-          NoNewPrivileges = true;
+          #AmbientCapabilities = [ 
+          #  # TODO file bug for systemd v 255: these properties are not merged!
+          #  "CAP_DAC_OVERRIDE CAP_SYS_RAWIO CAP_FOWNER CAP_SYS_MOUNT CAP_SYS_ADMIN"
+          #  #"CAP_SYS_ADMIN" # Needed for remounting /nix/store read/write
+          #];
+          #CapabilityBoundingSet = AmbientCapabilities;
+          #NoNewPrivileges = true;
           
           #PrivateDevices = true;
 
-          DevicePolicy = "closed";
-          DeviceAllow = [ 
-            "${cfg.tty} w"
-            "block-* rwm"
-            "/dev/zfs"
-          ];
+          #DevicePolicy = "closed";
+          #DeviceAllow = [ 
+          #  "${cfg.tty} w"
+          #  "block-* rwm"
+          #  "/dev/zfs"
+          #];
 
           # TODO: has no effect when non-root user
           PrivateNetwork = true;
           RestrictAddressFamilies = "AF_UNIX";
           IPAddressDeny = "any";
 
-          SystemCallFilter = [
-           "~@clock"
-           "~@debug"
-           "~@module"
-            #"~@mount"
-            #"~@privileged"
-            #"~@raw-io"
-           "~@reboot"
-            #"~@resources"
-            #"~@swap"
-            "~@obsolete"
-            "~@cpu-emulation"
-          ];
+          #SystemCallFilter = [
+          # "~@clock"
+          # "~@debug"
+          # "~@module"
+          #  #"~@mount"
+          #  #"~@privileged"
+          #  #"~@raw-io"
+          # "~@reboot"
+          #  #"~@resources"
+          #  #"~@swap"
+          #  "~@obsolete"
+          #  "~@cpu-emulation"
+          #];
 
-          ProtectHostname = true;
-          ProtectClock = true;
+          #ProtectHostname = true;
+          #ProtectClock = true;
 
           # TODO: Each one of these seem to create an fs namespac, so we can't use them
           #ProtectHome = true; // TODO: interferes with mount?

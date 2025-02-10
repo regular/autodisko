@@ -63,12 +63,12 @@ in {
           TTYPath = "${cfg.tty}";
 
           Environment = [
-            "HOME=/run/home"
+            #"HOME=/run/home"
             "autodisko_ignore_disks__label=${cfg.ignoreDiskWithLabel}"
           ];
 
           # Needed to share mounts with global namespace
-          PrivateMounts = "no";
+          #PrivateMounts = "no";
 
           #User = "regular";
           #DynamicUser = true;
@@ -146,10 +146,10 @@ in {
           #RestrictNamespaces = true; 
 
           #PrivateUsers = true; #TODO: This seems to prevent dd (access to /vdc)from working. WHY?
-          SystemCallArchitectures = "native";
-          UMask = "0077";
-          RestrictRealtime = true;
-          LockPersonality = true;
+          #SystemCallArchitectures = "native";
+          #UMask = "0077";
+          #RestrictRealtime = true;
+          #LockPersonality = true;
           #MemoryDenyWriteExecute = true; # for V8
         };
 

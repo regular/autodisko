@@ -70,7 +70,7 @@
           #mkdir -p /tmp/mnt
           #chmod 755 /tmp/mnt
           #${disko.packages.${system}.default}/bin/disko-install --mount-point /tmp/mnt --write-efi-boot-entries --flake /tmp/flake\#$conf $disk_args
-          ${disko.packages.${system}.default}/bin/disko --no-deps --mode destroy,format,mount --mount-point /mnt --flake /tmp/flake\#$conf --yes-wipe-all-disks
+          ${disko.packages.${system}.default}/bin/disko --no-deps --mode destroy,format,mount --mount-point /mnt --yes-wipe-all-disks --flake /tmp/flake\#$conf 
         else
           ${disko.packages.${system}.default}/bin/disko --mode disko /tmp/disk-config.nix
           mount

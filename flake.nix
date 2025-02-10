@@ -31,7 +31,7 @@
         # for sleep
         export PATH="${pkgs.coreutils-full}/bin''${PATH:+:''${PATH}}"
 
-        # for mountpoint
+        # for mountpoint, lsblk
         export PATH="${pkgs.util-linux}/bin''${PATH:+:''${PATH}}"
 
         # for gzip (run by tar)
@@ -44,9 +44,9 @@
         # for nixos-generate-config, nixos0-install
         export PATH="${pkgs.nixos-install-tools}/bin''${PATH:+:''${PATH}}"
         export PATH="${pkgs.nix}/bin''${PATH:+:''${PATH}}"
-        export PATH="${pkgs.bcachefs-tools}/bin''${PATH:+:''${PATH}}"
+        #export PATH="${pkgs.bcachefs-tools}/bin''${PATH:+:''${PATH}}"
 
-        ${pkgs.util-linux}/bin/lsblk -Jbo VENDOR,SUBSYSTEMS,TRAN,TYPE,MODEL,LABEL,NAME,START,SIZE,FSUSE%,PATH > tmp/disks.json
+        lsblk -Jbo VENDOR,SUBSYSTEMS,TRAN,TYPE,MODEL,LABEL,NAME,START,SIZE,FSUSE%,PATH > tmp/disks.json
         DEBUG=* ${self.packages.${system}.autodisko}/bin/autodisko /tmp/disks.json /tmp/disk-config.nix
 
         #TODO
@@ -77,6 +77,7 @@
           mkdir -p /mnt/etc/nixos
           rm -rf /mnt/etc/nixos/configuration || true
           cp -av /tmp/flake /mnt/etc/nixos/configuration
+          export PATH
           nixos-install --flake "/mnt/etc/nixos/configuration#$conf" --root /mnt --no-channel-copy --no-root-password --show-trace --verbose
           fix-bootorder # instlled by deployment-target
         else

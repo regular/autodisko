@@ -21,7 +21,7 @@
     packages.${system} = {
       default = pkgs.writeScriptBin "autodisko" ''
         #!${pkgs.bash}/bin/bash
-        set -eu
+        set -eux
         echo
         echo "AUTODISKO"
         echo "---------"

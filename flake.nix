@@ -43,6 +43,7 @@
 
         # for nixos-generate-config, nixos0-install
         export PATH="${pkgs.nixos-install-tools}/bin''${PATH:+:''${PATH}}"
+        export PATH="${pkgs.nix}/bin''${PATH:+:''${PATH}}"
         export PATH="${pkgs.bcachefs-tools}/bin''${PATH:+:''${PATH}}"
 
         ${pkgs.util-linux}/bin/lsblk -Jbo VENDOR,SUBSYSTEMS,TRAN,TYPE,MODEL,LABEL,NAME,START,SIZE,FSUSE%,PATH > tmp/disks.json

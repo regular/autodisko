@@ -77,6 +77,8 @@
           mkdir -p /mnt/etc/nixos
           rm -rf /mnt/etc/nixos/configuration || true
           cp -av /tmp/flake /mnt/etc/nixos/configuration
+          echo "$conf" > /mnt/etc/nixos/nixos-configuration-name
+          install-flake-unattended
         else
           ${disko.packages.${system}.default}/bin/disko --mode disko /tmp/disk-config.nix
           mount

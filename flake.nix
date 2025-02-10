@@ -41,7 +41,7 @@
         export PATH="/run/wrappers/bin''${PATH:+:''${PATH}}"
         echo
 
-        # for nixos-generate-config
+        # for nixos-generate-config, nixos0-install
         export PATH="${pkgs.nixos-install-tools}/bin''${PATH:+:''${PATH}}"
         export PATH="${pkgs.bcachefs-tools}/bin''${PATH:+:''${PATH}}"
 
@@ -71,10 +71,17 @@
           #chmod 755 /tmp/mnt
           #${disko.packages.${system}.default}/bin/disko-install --mount-point /tmp/mnt --write-efi-boot-entries --flake /tmp/flake\#$conf $disk_args
           ${disko.packages.${system}.default}/bin/disko --debug --mode disko --flake /tmp/flake\#$conf 
+          mount
+
+          mkdir -p /mnt/etc/nixos
+          rm -rf /mnt/etc/nixos/configuration || true
+          cp -av /tmp/flake /mnt/etc/nixos/configuration
+          nixos-install --flake "/mnt/etc/nixos/configuration\#$conf" --root /mnt --no-channel-copy --no-root-password --show-trace --verbose
+          fix-bootorder # instlled by deployment-target
         else
           ${disko.packages.${system}.default}/bin/disko --mode disko /tmp/disk-config.nix
+          mount
         fi
-        mount
         echo "Gernating /tmp/hardware-configuration.nix"
         nixos-generate-config --show-hardware-config --root /mnt > /tmp/hardware-configuration.nix
         nixos-generate-config --show-hardware-config --no-filesystems --root /mnt > /tmp/hardware-configuration-no-fs.nix

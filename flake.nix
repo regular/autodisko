@@ -73,11 +73,11 @@
           ${disko.packages.${system}.default}/bin/disko --debug --mode disko --flake /tmp/flake\#$conf 
         else
           ${disko.packages.${system}.default}/bin/disko --mode disko /tmp/disk-config.nix
-          mount
-          echo "Gernating /tmp/hardware-configuration.nix"
-          nixos-generate-config --show-hardware-config --root /mnt > /tmp/hardware-configuration.nix
-          nixos-generate-config --show-hardware-config --no-filesystems --root /mnt > /tmp/hardware-configuration-no-fs.nix
         fi
+        mount
+        echo "Gernating /tmp/hardware-configuration.nix"
+        nixos-generate-config --show-hardware-config --root /mnt > /tmp/hardware-configuration.nix
+        nixos-generate-config --show-hardware-config --no-filesystems --root /mnt > /tmp/hardware-configuration-no-fs.nix
       '';
 
       autodisko = pkgs.buildNpmPackage rec {

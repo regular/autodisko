@@ -77,9 +77,6 @@
           mkdir -p /mnt/etc/nixos
           rm -rf /mnt/etc/nixos/configuration || true
           cp -av /tmp/flake /mnt/etc/nixos/configuration
-          export PATH
-          nixos-install --flake "/mnt/etc/nixos/configuration#$conf" --root /mnt --no-channel-copy --no-root-password --show-trace --verbose
-          fix-bootorder # instlled by deployment-target
         else
           ${disko.packages.${system}.default}/bin/disko --mode disko /tmp/disk-config.nix
           mount

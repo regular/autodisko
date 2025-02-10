@@ -2,6 +2,19 @@ inputs: { config, lib, pkgs, ... }: let
   description = "A modern lsblk with json output";
 in {
   options.services.autodisko = with lib; {
+    use-config-server = mkOption rec {
+      type = types.bool;
+      default = false;
+      defaultText = "false";
+      description = "Wheter to ask a provisioning server for the nixosConfiguration based on target's hardware, or derive the disk configuration locally";
+    };
+    config-download-url = mkOption rec {
+      type = types.str;
+      default = "https://dyn.tracport.com/provisioning/config";
+      defaultText = default;
+      description = "Where to request a nixosConfiguration flake for the target";
+    };
+
     tty = mkOption rec {
       type = types.path;
       default = "/dev/tty1";
@@ -41,7 +54,7 @@ in {
         wantedBy = [ "autodisko.target" ];
 
         serviceConfig = rec {
-          ExecStart = "${inputs.self.apps.x86_64-linux.default.program}";
+          ExecStart = "${inputs.self.apps.x86_64-linux.default.program}${lib.optionalString cfg.use-config-server crg.config-download-url}";
           RemainAfterExit = true;
           Type = "idle";
 

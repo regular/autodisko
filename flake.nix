@@ -35,12 +35,31 @@
         export PATH="/run/wrappers/bin''${PATH:+:''${PATH}}"
         echo
 
-        DEBUG=* ${self.packages.${system}.autodisko}/bin/autodisko <(${pkgs.util-linux}/bin/lsblk -Jbo VENDOR,SUBSYSTEMS,TRAN,TYPE,MODEL,LABEL,NAME,START,SIZE,FSUSE%,PATH) /tmp/disk-config.nix
+        ${pkgs.util-linux}/bin/lsblk -Jbo VENDOR,SUBSYSTEMS,TRAN,TYPE,MODEL,LABEL,NAME,START,SIZE,FSUSE%,PATH > tmp/disks.json
+        DEBUG=* ${self.packages.${system}.autodisko}/bin/autodisko </tmp/disks.json /tmp/disk-config.nix
+
         #TODO
         echo "secret1" > /tmp/luks.key1
         echo "secret2" > /tmp/luks.key2
 
-        ${disko.packages.${system}.default}/bin/disko --mode disko /tmp/disk-config.nix
+        if [ $# -eq 1 ]; then
+          URL=$1
+          echo "Flake download from $URL"
+          ${pkgs.curl}/bin/curl -vX POST \
+            -H "Content-Type: application/json" \
+            -d @/tmp/disks.json \
+            -D /tmp/headers.txt \
+            $URL \
+            -o /tmp/flake.tar.gz
+          rm -rf /tmp/flake && mkdir -p /tmp/flake
+          ${pkgs.gnutar}/bin/tar -xzf /tmp/flake.tar.gz --strip-components=1 -C /tmp/flake
+          conf=$(gawk -F': ' '/x-nixos-configuration:/ {print $2}' /tmp/headers.txt)
+          cat $(${disko.packages.${system}.default}/bin/disko --mode disko --dry-run --flake /tmp/flake\#$conf)
+          exit 1
+        else
+          ${disko.packages.${system}.default}/bin/disko --mode disko /tmp/disk-config.nix
+        fi
+
         mount
         echo "Gernating /tmp/hardware-configuration.nix"
         export PATH="${pkgs.nixos-install-tools}/bin''${PATH:+:''${PATH}}"

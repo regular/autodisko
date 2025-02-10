@@ -36,7 +36,7 @@
         echo
 
         ${pkgs.util-linux}/bin/lsblk -Jbo VENDOR,SUBSYSTEMS,TRAN,TYPE,MODEL,LABEL,NAME,START,SIZE,FSUSE%,PATH > tmp/disks.json
-        DEBUG=* ${self.packages.${system}.autodisko}/bin/autodisko </tmp/disks.json /tmp/disk-config.nix
+        DEBUG=* ${self.packages.${system}.autodisko}/bin/autodisko /tmp/disks.json /tmp/disk-config.nix
 
         #TODO
         echo "secret1" > /tmp/luks.key1

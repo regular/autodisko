@@ -62,17 +62,14 @@
           rm -rf /tmp/flake && mkdir -p /tmp/flake
           ${pkgs.gnutar}/bin/tar -xzf /tmp/flake.tar.gz --strip-components=1 -C /tmp/flake
           nixos-generate-config --show-hardware-config --no-filesystems --root /mnt > /tmp/flake/hardware/$conf.nix
-          cat $(${disko.packages.${system}.default}/bin/disko --mode disko --dry-run --flake /tmp/flake\#$conf)
-          exit 1
+          ${disko.packages.${system}.default}/bin/disko-install --write-efi-boot-entries --flake /tmp/flake\#$conf
         else
           ${disko.packages.${system}.default}/bin/disko --mode disko /tmp/disk-config.nix
+          mount
+          echo "Gernating /tmp/hardware-configuration.nix"
+          nixos-generate-config --show-hardware-config --root /mnt > /tmp/hardware-configuration.nix
+          nixos-generate-config --show-hardware-config --no-filesystems --root /mnt > /tmp/hardware-configuration-no-fs.nix
         fi
-
-        mount
-        echo "Gernating /tmp/hardware-configuration.nix"
-        nixos-generate-config --show-hardware-config --root /mnt > /tmp/hardware-configuration.nix
-        nixos-generate-config --show-hardware-config --no-filesystems --root /mnt > /tmp/hardware-configuration-no-fs.nix
-        #echo "Now sleeping ..."
       '';
 
       autodisko = pkgs.buildNpmPackage rec {

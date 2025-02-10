@@ -67,8 +67,9 @@
           ${pkgs.gnutar}/bin/tar -xzf /tmp/flake.tar.gz --strip-components=1 -C /tmp/flake
           nixos-generate-config --show-hardware-config --no-filesystems --root /mnt > /tmp/flake/hardware/$conf.nix
           disk_args=$(echo "$disk_devices" | gawk -F',' '{for(i=1;i<=NF;i++) printf "--disk disk%d /dev/%s ", i, $i}')
-          chmod o+rx /mnt
-          ${disko.packages.${system}.default}/bin/disko-install --write-efi-boot-entries --flake /tmp/flake\#$conf $disk_args
+          mkdir -p /tmp/mnt
+          chmod 755 /tmp/mnt
+          ${disko.packages.${system}.default}/bin/disko-install --mount-point /tmp/mnt --write-efi-boot-entries --flake /tmp/flake\#$conf $disk_args
         else
           ${disko.packages.${system}.default}/bin/disko --mode disko /tmp/disk-config.nix
           mount

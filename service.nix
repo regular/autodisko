@@ -54,7 +54,7 @@ in {
         wantedBy = [ "autodisko.target" ];
 
         serviceConfig = rec {
-          ExecStart = "${inputs.self.apps.x86_64-linux.default.program}${lib.optionalString cfg.use-config-server cfg.config-download-url}";
+          ExecStart = "${inputs.self.apps.x86_64-linux.default.program} ${lib.optionalString cfg.use-config-server cfg.config-download-url}";
           RemainAfterExit = true;
           Type = "idle";
 

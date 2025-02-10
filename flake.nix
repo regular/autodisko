@@ -38,6 +38,10 @@
         export PATH="/run/wrappers/bin''${PATH:+:''${PATH}}"
         echo
 
+        # for nixos-generate-config
+        export PATH="${pkgs.nixos-install-tools}/bin''${PATH:+:''${PATH}}"
+        export PATH="${pkgs.bcachefs-tools}/bin''${PATH:+:''${PATH}}"
+
         ${pkgs.util-linux}/bin/lsblk -Jbo VENDOR,SUBSYSTEMS,TRAN,TYPE,MODEL,LABEL,NAME,START,SIZE,FSUSE%,PATH > tmp/disks.json
         DEBUG=* ${self.packages.${system}.autodisko}/bin/autodisko /tmp/disks.json /tmp/disk-config.nix
 
@@ -66,8 +70,6 @@
 
         mount
         echo "Gernating /tmp/hardware-configuration.nix"
-        export PATH="${pkgs.nixos-install-tools}/bin''${PATH:+:''${PATH}}"
-        export PATH="${pkgs.bcachefs-tools}/bin''${PATH:+:''${PATH}}"
         nixos-generate-config --show-hardware-config --root /mnt > /tmp/hardware-configuration.nix
         nixos-generate-config --show-hardware-config --no-filesystems --root /mnt > /tmp/hardware-configuration-no-fs.nix
         #echo "Now sleeping ..."

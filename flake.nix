@@ -31,6 +31,9 @@
         # for sleep
         export PATH="${pkgs.coreutils-full}/bin''${PATH:+:''${PATH}}"
 
+        # for mountpoint
+        export PATH="${pkgs.util-linux}/bin''${PATH:+:''${PATH}}"
+
         # for gzip (run by tar)
         export PATH="${pkgs.gzip}/bin''${PATH:+:''${PATH}}"
         

@@ -56,7 +56,7 @@
             -o /tmp/flake.tar.gz
           rm -rf /tmp/flake && mkdir -p /tmp/flake
           ${pkgs.gnutar}/bin/tar -xzf /tmp/flake.tar.gz --strip-components=1 -C /tmp/flake
-          conf=$(gawk -F': ' '/x-nixos-configuration:/ {print $2}' /tmp/headers.txt)
+          conf=$(gawk -F': ' '/x-nixos-configuration:/ {gsub(/\r/,""); print $2}' /tmp/headers.txt)
           cat $(${disko.packages.${system}.default}/bin/disko --mode disko --dry-run --flake /tmp/flake\#$conf)
           exit 1
         else

@@ -65,7 +65,6 @@
 
           rm -rf /tmp/flake && mkdir -p /tmp/flake
           ${pkgs.gnutar}/bin/tar -xzf /tmp/flake.tar.gz --strip-components=1 -C /tmp/flake
-          nixos-generate-config --show-hardware-config --no-filesystems --root /mnt > /tmp/flake/hardware/$conf.nix
 
           conf=$(gawk -F': ' '/x-nixos-configuration:/ {gsub(/\r/,""); print $2}' /tmp/headers.txt)
           encoded=$(gawk -F': ' '/x-disk-layout-overrides:/ {gsub(/\r/,""); print $2}' /tmp/headers.txt)
@@ -73,6 +72,8 @@
           # decodeURIComponent and put into /tmp/flake/disks.json
           echo $encoded | ${pkgs.nodejs}/bin/node -e 'console.log(decodeURIComponent(require("fs").readFileSync("/dev/stdin", "utf8")))' > /tmp/flake/disks.json
           cat /tmp/flake/disks.json
+
+          nixos-generate-config --show-hardware-config --no-filesystems --root /mnt > /tmp/flake/hardware/$conf.nix
 
           #${disko.packages.${system}.default}/bin/disko-install --mount-point /tmp/mnt --write-efi-boot-entries --flake /tmp/flake\#$conf
           ${disko.packages.${system}.default}/bin/disko --debug --mode disko --flake /tmp/flake\#$conf 

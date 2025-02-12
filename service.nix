@@ -54,7 +54,7 @@ in {
         wantedBy = [ "autodisko.target" ];
 
         serviceConfig = rec {
-          ExecStart = "${pkgs.stdenv.shell} -c '${inputs.self.apps.x86_64-linux.default.program} ${lib.optionalString cfg.use-config-server cfg.config-download-url} | tee >(logger)'";
+          ExecStart = "${pkgs.stdenv.shell} -c '${inputs.self.apps.x86_64-linux.default.program} ${lib.optionalString cfg.use-config-server cfg.config-download-url} 2> >(tee >(logger -p user.err) >&2) > >(tee >(logger -p user.info))'";
           RemainAfterExit = true;
           Type = "idle";
 

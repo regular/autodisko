@@ -6,8 +6,15 @@ const debug = require('debug')('autodisko')
 const doit = require('.')
 
 async function main() {
-  const [filename, outfilename] = conf._;
   debug('conf: %O', conf)
+
+  if (conf._.length < 1) {
+    console.error(`Usage: inputfile [--output outputfile | --candidates]`)
+    process.exit(1)
+  }
+  const filename = conf._[0];
+  const outfilename = conf.output
+
   debug('input filename: %s', filename)
   debug('output filename: %s', outfilename)
 

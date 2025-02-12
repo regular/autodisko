@@ -18,11 +18,24 @@ module.exports = async function(input, output, conf) {
     }) )
   
   debug('disks: %O', disks)
-  console.log('transport, model, label, name, size, path')
+  console.error('transport, model, label, name, size, path')
   disks.forEach( ({tran, model, label, name, size, path, tags})=>{
-    console.log(`- ${name} ${tran} ${model} ${label || 'n/a'} ${hs(size)} ${path} ${tags ? '(' + tags.join(', ') + ')' : ''}`)
+    console.error(`- ${name} ${tran} ${model} ${label || 'n/a'} ${hs(size)} ${path} ${tags ? '(' + tags.join(', ') + ')' : ''}`)
   })
-  const candidates = disks.filter( d=>d.tags == undefined || d.tags.length == 0 ).sort( (a,b)=>a.size - b.size)
+  const candidates = disks.filter( d=>d.tags == undefined || d.tags.length == 0 ).sort( (a,b)=>{
+    if (a.size !== b.size) {
+      return a.size - b.size
+    }
+    return a.path < b.path ? -1 : 1
+  })
+
+  if (conf.candidates) {
+    const result = Object.fromEntries(candidates.map( (c, i)=>{
+      return [`disk${i+1}-device`, c.path]
+    }))
+    console.log(JSON.stringify(result))
+    return
+  }
 
   // TODO: logic for selecting more complex layouts
   // - raid, hybrid, etc

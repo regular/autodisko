@@ -46,8 +46,8 @@
         export PATH="${pkgs.nix}/bin''${PATH:+:''${PATH}}"
         #export PATH="${pkgs.bcachefs-tools}/bin''${PATH:+:''${PATH}}"
 
-        lsblk -Jbo VENDOR,SUBSYSTEMS,TRAN,TYPE,MODEL,LABEL,NAME,START,SIZE,FSUSE%,PATH > tmp/disks.json
-        DEBUG=* ${self.packages.${system}.autodisko}/bin/autodisko /tmp/disks.json /tmp/disk-config.nix
+        lsblk -Jbo VENDOR,SUBSYSTEMS,TRAN,TYPE,MODEL,LABEL,NAME,START,SIZE,FSUSE%,PATH > tmp/lsblk.json
+        DEBUG=* ${self.packages.${system}.autodisko}/bin/autodisko /tmp/lsblk.json --output /tmp/disk-config.nix
 
         #TODO
         echo "secret1" > /tmp/luks.key1
@@ -58,19 +58,23 @@
           echo "Flake download from $URL"
           ${pkgs.curl}/bin/curl -vX POST \
             -H "Content-Type: application/json" \
-            -d @/tmp/disks.json \
+            -d @/tmp/lsblk.json \
             -D /tmp/headers.txt \
             $URL \
             -o /tmp/flake.tar.gz
-          conf=$(gawk -F': ' '/x-nixos-configuration:/ {gsub(/\r/,""); print $2}' /tmp/headers.txt)
-          disk_devices=$(gawk -F': ' '/x-disk-devices:/ {gsub(/\r/,""); print $2}' /tmp/headers.txt)
+
           rm -rf /tmp/flake && mkdir -p /tmp/flake
           ${pkgs.gnutar}/bin/tar -xzf /tmp/flake.tar.gz --strip-components=1 -C /tmp/flake
           nixos-generate-config --show-hardware-config --no-filesystems --root /mnt > /tmp/flake/hardware/$conf.nix
-          disk_args=$(echo "$disk_devices" | gawk -F',' '{for(i=1;i<=NF;i++) printf "--disk disk%d /dev/%s ", i, $i}')
-          #mkdir -p /tmp/mnt
-          #chmod 755 /tmp/mnt
-          #${disko.packages.${system}.default}/bin/disko-install --mount-point /tmp/mnt --write-efi-boot-entries --flake /tmp/flake\#$conf $disk_args
+
+          conf=$(gawk -F': ' '/x-nixos-configuration:/ {gsub(/\r/,""); print $2}' /tmp/headers.txt)
+          encoded=$(gawk -F': ' '/x-disk-layout-overrides:/ {gsub(/\r/,""); print $2}' /tmp/headers.txt)
+          
+          # decodeURIComponent and put into /tmp/flake/disks.json
+          echo $encoded | ${pkgs.nodejs}/bin/node -e 'console.log(decodeURIComponent(require("fs").readFileSync("/dev/stdin", "utf8")))' > /tmp/flake/disks.json
+          cat /tmp/flake/disks.json
+
+          #${disko.packages.${system}.default}/bin/disko-install --mount-point /tmp/mnt --write-efi-boot-entries --flake /tmp/flake\#$conf
           ${disko.packages.${system}.default}/bin/disko --debug --mode disko --flake /tmp/flake\#$conf 
           mount
 

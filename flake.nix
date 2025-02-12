@@ -84,13 +84,16 @@
           cp -av /tmp/flake /mnt/etc/nixos/configuration
           echo "$conf" > /mnt/etc/nixos/nixos-configuration-name
           /run/current-system/sw/bin/install-flake-unattended
+          mkdir -p /mnt/persist/etc/nixos || true
+          rm -rf /mnt/persist/etc/nixos/configuration || true
+          cp -av /mnt/etc/nixos/configuration /mnt/persist/etc/nixos/configuration || true
         else
+          echo "Gernating /tmp/hardware-configuration.nix"
+          nixos-generate-config --show-hardware-config --root /mnt > /tmp/hardware-configuration.nix
+          nixos-generate-config --show-hardware-config --no-filesystems --root /mnt > /tmp/hardware-configuration-no-fs.nix
           ${disko.packages.${system}.default}/bin/disko --mode disko /tmp/disk-config.nix
           mount
         fi
-        echo "Gernating /tmp/hardware-configuration.nix"
-        nixos-generate-config --show-hardware-config --root /mnt > /tmp/hardware-configuration.nix
-        nixos-generate-config --show-hardware-config --no-filesystems --root /mnt > /tmp/hardware-configuration-no-fs.nix
       '';
 
       autodisko = pkgs.buildNpmPackage rec {

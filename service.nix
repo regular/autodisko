@@ -48,13 +48,18 @@ in {
         #AllowIsolate = "yes";
       };
 
-      services.autodisko = {
+      services.autodisko = let
+        tee = "${pkgs.coreutils-full}/bin/tee";
+        logger = "${pkgs.util-linux}/bin/logger";
+        bin = "${inputs.self.apps.x86_64-linux.default.program}";
+        args = "${lib.optionalString cfg.use-config-server cfg.config-download-url}";
+      in {
         inherit description;
         after = [  "multi-user.target" ];
         wantedBy = [ "autodisko.target" ];
 
         serviceConfig = rec {
-          ExecStart = "${pkgs.stdenv.shell} -c '${inputs.self.apps.x86_64-linux.default.program} ${lib.optionalString cfg.use-config-server cfg.config-download-url} 2> >(tee >(logger -p user.err) >&2) > >(tee >(logger -p user.info))'";
+          ExecStart = "${pkgs.stdenv.shell} -c '${bin} ${args} 2> >(${tee} >(${logger} -p user.err) >&2) > >(${tee} >(${logger} -p user.info))'";
           RemainAfterExit = true;
           Type = "idle";
 
@@ -64,7 +69,6 @@ in {
 
           Environment = [
             #"HOME=/run/home"
-            "PATH=${pkgs.coreutils-full}/bin:${pkgs.util-linux}/bin"
             "autodisko_ignore_disks__label=${cfg.ignoreDiskWithLabel}"
           ];
 

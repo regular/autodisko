@@ -1,5 +1,5 @@
 inputs: { config, lib, pkgs, ... }: let
-  description = "A modern lsblk with json output";
+  description = "Automatically apply disco disk layouts";
 in {
   options.services.autodisko = with lib; {
     use-config-server = mkOption rec {
@@ -54,7 +54,7 @@ in {
         wantedBy = [ "autodisko.target" ];
 
         serviceConfig = rec {
-          ExecStart = "${inputs.self.apps.x86_64-linux.default.program} ${lib.optionalString cfg.use-config-server cfg.config-download-url}";
+          ExecStart = "${pkgs.stdenv.shell} -c '${inputs.self.apps.x86_64-linux.default.program} ${lib.optionalString cfg.use-config-server cfg.config-download-url} | tee >(logger)'";
           RemainAfterExit = true;
           Type = "idle";
 
@@ -64,6 +64,7 @@ in {
 
           Environment = [
             #"HOME=/run/home"
+            "PATH=${pkgs.coreutils-full}/bin:${pkgs.util-linux}/bin"
             "autodisko_ignore_disks__label=${cfg.ignoreDiskWithLabel}"
           ];
 

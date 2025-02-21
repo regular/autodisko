@@ -15,11 +15,11 @@
   in {
     apps.x86_64-linux.default = {
       type = "app";
-      program = "${self.packages.${system}.default}/bin/autodisko";
+      program = "${self.packages.${system}.default}";
     };
 
     packages.${system} = {
-      default = pkgs.writeScriptBin "autodisko" ''
+      default = pkgs.writeShellScript "run-autodisko" ''
         #!${pkgs.bash}/bin/bash
         set -eux
         echo
@@ -46,7 +46,7 @@
         export PATH="${pkgs.nix}/bin''${PATH:+:''${PATH}}"
         #export PATH="${pkgs.bcachefs-tools}/bin''${PATH:+:''${PATH}}"
 
-        lsblk -Jbo VENDOR,SUBSYSTEMS,TRAN,TYPE,MODEL,LABEL,NAME,START,SIZE,FSUSE%,PATH > tmp/lsblk.json
+        lsblk -Jbo VENDOR,SUBSYSTEMS,TRAN,TYPE,MODEL,LABEL,NAME,START,SIZE,FSUSE%,PATH > /tmp/lsblk.json
         DEBUG=* ${self.packages.${system}.autodisko}/bin/autodisko /tmp/lsblk.json --output /tmp/disk-config.nix
 
         #TODO

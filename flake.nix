@@ -69,9 +69,9 @@
           conf=$(gawk -F': ' '/x-nixos-configuration:/ {gsub(/\r/,""); print $2}' /tmp/headers.txt)
           encoded=$(gawk -F': ' '/x-disk-layout-overrides:/ {gsub(/\r/,""); print $2}' /tmp/headers.txt)
           
-          # decodeURIComponent and put into /tmp/flake/disks.json
-          echo $encoded | ${pkgs.nodejs}/bin/node -e 'console.log(decodeURIComponent(require("fs").readFileSync("/dev/stdin", "utf8")))' > /tmp/flake/disks.json
-          cat /tmp/flake/disks.json
+          # decodeURIComponent and put into /tmp/flake/hardware/$conf-disks.json
+          echo $encoded | ${pkgs.nodejs}/bin/node -e 'console.log(decodeURIComponent(require("fs").readFileSync("/dev/stdin", "utf8")))' > /tmp/flake/hardware/$conf-disks.json
+          cat /tmp/flake/hardware/$conf-disks.json
 
           nixos-generate-config --show-hardware-config --no-filesystems --root /mnt > /tmp/flake/hardware/$conf.nix
 
